@@ -2,7 +2,6 @@ const express = require('express');
 const { createLogger, format, transports } = require('winston');
 const mongoose = require('mongoose')
 const Book = require('./models/books.js')
-const { removeBook, getAllBooks, getBook, addBook } = require('./books.js')
 const app = express()
 
 logLevel = {
@@ -95,6 +94,19 @@ app.post('/', async (req, res) => {
 
     })
 
+// Deletes a book
+app.delete('/:id', async (req, res) => {
+    const id = parseInt(req.params.id)
+    await Book.findByIdAndDelete(id)
+    .then((result) => {
+        res.send('Book deleted successfully')
+    }).catch((err) => {
+        console.log(err)
+    })
+})
+    
+
+
 // // Updates a book
 // app.put('/:id', async (req, res) => {
 //     const book = books.find(book => book.id == parseInt(req.params.id))
@@ -130,16 +142,6 @@ app.post('/', async (req, res) => {
 //     res.send("Book updated successfully")
 // })
 
-// // Deletes a book
-// app.delete('/:id', async (req, res) => {
-    //     const id = parseInt(req.params.id)
-//     const book = removeBook(id)
-//     if (book) {
-    //         res.send(`Book with ID ${id} was deleted`)
-    //     }
-    //     res.send('Book deleted successfully')
-    // })
-    //
     
     
 // Validates the input
